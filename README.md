@@ -8,11 +8,11 @@ The objective of this project is to build a segmentation network, it will be tra
 [//]: # (Image References)
 
 [image0]: ./misc_images/semantic_segmentation.jpg "Semantic Segmentation"
-
+[image1]: ./misc_images/Fully_Convolutional_Network.jpg "Fully Convolutional Network"
 
 #### How to run the program with your own code
 
-For the execution of your own code, inside the folder /code
+For the execution of your own code, inside the folder */code*
 
 ```bash
 1.  jupyter notebook model_training.ipynb
@@ -80,6 +80,9 @@ I will create a full convolution network following the suggestions of the classe
 1. An encoder network that transforms an image input into feature maps.
 2. Followed by 1x1 convolution that combines the feature maps (similar to a fully connected layer).
 3. Finally a decoder network that upsample the result from the previous layer back to the same dimensions as the input image.
+
+![alt text][image1]
+###### Example FCN comprised of Encoder block (left) followed by 1x1 Convolution (center) and Decoder block (right)
 
 ```python
 
