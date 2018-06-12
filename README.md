@@ -72,6 +72,7 @@ If we want to do a " semantic segmentation ", we are interested not only in clas
 ![alt text][image0]
 ###### Trained FCN performing semantic segmentation. Input image (left), ground truth (center) and FCN output (left).
 
+
 A classical convolution network classifies the probability of a determined class is present in the image, unlike a full convolution network (FCN), which preserve the spatial information throughout the entire network outputting by generating a map probabilities corresponding to each pixel of the input image.
 
 I will create a full convolution network following the suggestions of the classes and this notebook, this FCN will consist of three parts:
