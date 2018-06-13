@@ -201,7 +201,7 @@ I've tried several configurations observing the learning curves patterns and res
 My fist attempt was to simply use a single encoder block followed by a single decoder block.
 
 ![alt text][image3]
-###### FCN Model - 1 Encoder layer, 1x1 Convolution and 1 Decoder layer
+######           FCN Model - 1 Encoder layer, 1x1 Convolution and 1 Decoder layer
 
 ```python
 def fcn_model(inputs, num_classes):
@@ -228,7 +228,7 @@ The network performs poorly getting a score of 17%.
 I’ve then added one more pair of encoder/decoder blocks.
 
 ![alt text][image4]
-###### FCN Model - 2 Encoder layers, 1x1 Convolution and 2 Decoder layers
+######           FCN Model - 2 Encoder layers, 1x1 Convolution and 2 Decoder layers
 
 ```python
 def fcn_model(inputs, num_classes):
@@ -257,7 +257,7 @@ The network performs poorly getting a score of 17%.
 Once again, for my third attempt I’ve added yet another pair of encoder/decoder blocks.
 
 ![alt text][image5]
-###### FCN Model - 3 Encoder layers, 1x1 Convolution and 3 Decoder layers
+######           FCN Model - 3 Encoder layers, 1x1 Convolution and 3 Decoder layers
 
 
 ```python
@@ -288,8 +288,8 @@ The network performs poorly getting a score of 17%.
 
 I've tried a 4th attempt added another pair of encoder/decoder blocks.
 
-![alt text][image5]
-###### FCN Model - 4 Encoder layers, 1x1 Convolution and 4 Decoder layers
+![alt text][image6]
+######           FCN Model - 4 Encoder layers, 1x1 Convolution and 4 Decoder layers
 
 
 ```python
