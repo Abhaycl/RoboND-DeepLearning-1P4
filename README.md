@@ -69,16 +69,13 @@ You're reading it!
 
 Semantic Segmentation is the task of assigning meaning to a part of an object. This can be done at the pixel level where we assign each pixel to a target class such as road, car, pedestrian, sign, or any number of other classes. Semantic segmentation helps us derive valuable information about every pixel in the image rather than just slicing sections into bounding boxes. It's mainly relevant to full scene understanding help with perception of the objects.
 
-<center>![alt text][image0]</center>
-###### <center>Trained FCN performing semantic segmentation. Input image (left), ground truth (center) and FCN output (left)</center>.
+![alt text][image0]
+###### Trained FCN performing semantic segmentation. Input image (left), ground truth (center) and FCN output (left).
 
 
 ### Network Architecture
 
-If we want to do a *semantic segmentation*, we are interested not only in classifying whether a target person is present or not in the input image, but also in where that person is so that the drone controller can take the necessary actions such as: zoom in if the target is far away or move away from the centre of the image.
-
-![alt text][image0]
-###### Trained FCN performing semantic segmentation. Input image (left), ground truth (center) and FCN output (left).
+The goal of the encoder is to extract features from the image. It does that via a several layers that find simple patterns in the first layer and then gradually learn to understand more and more about complex structures and shapes in the deeper layers. Next, the 1x1 convolution layer implements the same function as a fully connected layer but with the advantage of saving spatial information. The 1x1 convolution layer connects to the decoder, in which the goal of it is to up-scale the output of the encoder such that it's the same size as the original image. In addition, there are skip connections which are connected non-adjacent layers together. The use of skip connections here, for example, the output from the first encoder is connected to the input of the final decoder. The reason is to save information that might be lost during the encoding process, as a result, the network is able to make more precise segmentation decisions. At last, the last decoder stage contains a convolution output layer with softmax activation which makes the final pixel-wise segmentation between the three classes..
 
 
 A classical convolution network classifies the probability of a determined class is present in the image, unlike a full convolution network (FCN), which preserve the spatial information throughout the entire network outputting by generating a map probabilities corresponding to each pixel of the input image.
