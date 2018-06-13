@@ -201,7 +201,7 @@ I've tried several configurations observing the learning curves patterns and res
 My fist attempt was to simply use a single encoder block followed by a single decoder block.
 
 ![alt text][image3]
-######           FCN Model - 1 Encoder layer, 1x1 Convolution and 1 Decoder layer
+###### FCN Model - 1 Encoder layer, 1x1 Convolution and 1 Decoder layer
 
 ```python
 def fcn_model(inputs, num_classes):
@@ -228,7 +228,7 @@ The network performs poorly getting a score of 17%.
 I’ve then added one more pair of encoder/decoder blocks.
 
 ![alt text][image4]
-######           FCN Model - 2 Encoder layers, 1x1 Convolution and 2 Decoder layers
+###### FCN Model - 2 Encoder layers, 1x1 Convolution and 2 Decoder layers
 
 ```python
 def fcn_model(inputs, num_classes):
@@ -257,7 +257,7 @@ The network performs poorly getting a score of 17%.
 Once again, for my third attempt I’ve added yet another pair of encoder/decoder blocks.
 
 ![alt text][image5]
-######           FCN Model - 3 Encoder layers, 1x1 Convolution and 3 Decoder layers
+###### FCN Model - 3 Encoder layers, 1x1 Convolution and 3 Decoder layers
 
 
 ```python
@@ -289,7 +289,7 @@ The network performs poorly getting a score of 17%.
 I've tried a 4th attempt added another pair of encoder/decoder blocks.
 
 ![alt text][image6]
-######           FCN Model - 4 Encoder layers, 1x1 Convolution and 4 Decoder layers
+###### FCN Model - 4 Encoder layers, 1x1 Convolution and 4 Decoder layers
 
 
 ```python
@@ -322,7 +322,7 @@ The network performs poorly getting a score of 17%.
 
 I didn't record any data from simulator, I was able to do all required steps using the provided Training, Validation, and Sample Evaluation Data.
 
-<4table><tbody>
+<table><tbody>
     <tr><th align="center" colspan="3"> Dataset </td></tr>
     <tr><th align="center">Folder</th><th align="center">Content</th></tr>
     <tr><td align="left">/data/train</td><td align="left">4,131 images + 4,131 masks</td></tr>
@@ -340,7 +340,7 @@ I didn't record any data from simulator, I was able to do all required steps usi
 
 This was the most laborious part of this project. My strategy was to first start with arbitrary values and then later tweak them one-by-one hoping to get to a passing score.
 
-The Hyperparameters use in this project is:
+For the tuning of parameter values, for each of them I chose a small value and a big value comparing them to see an average term that would satisfy the expectations. The final Hyperparameters use in this project is:
 
 ```python
 learning_rate = 0.001
@@ -368,5 +368,21 @@ I assume that the lower the batch size is, the noisier the training signal is go
 The training signal seems to be stable enough and a batch size of 1 seems to be a suitable value for this dataset. Before moving forward, I've decided to check for larger values. since larger mini-batch sizes can potentially have performance advantage due to GPU speed-up of matrix-matrix products over matrix-vector products. I've then found that the batch size of 16 halved the time to process one epoch from 80s to 40s with a better final score.
 
 
+#### The limitations to the neural network
+
+FCNs can only learn from what is in the data. It is also worth noting that, despite the fact the FCN above does a great job following a person it would not work for following a dog, cat, car, etc. This is due the fact the model was trained with labeled examples covering only the following 3 categories:
+
+1. The Hero (target person)
+2. Other people
+3. Everything else
+
+To create a model that works with more categories it is necessary to collect and label images with enough examples for each class with different poses, distances and lighting conditions. With such dataset on hand it is then possible to train a new model using the same technique described here. This new model would then output more filters, one for each class, those could be used by the drone to follow any one of the classes.
+
+
 ### Observations, possible improvements, things used
 
+Since the search for hyperparameters was an extremely tedious process I would like to try some sort of automated solution Hyperparameter Optimization feature and let it fine tune the parameters automatically.
+
+I would also try adding dropout to the model to prevent overfitting as well as pooling layers. Pooling would be interesting as it would provide a better way to reduce the spacial dimensions without loosing as much information as convolution strides.
+
+This was a really exciting project and I've started to appreciate how hard it is to architect and train a deep model. Also I've learned the importance of good data. It became clear that the model is only as good as the data it is trained on. Collecting good data that covers all scenarios that the model needs to perform well in real life is as challenging as architecting and training the model.
