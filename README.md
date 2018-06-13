@@ -1,6 +1,6 @@
 # Deep Learning Project Starter Code
 
-The objective of this project is to build a segmentation network, it will be trained, validated and implemented in the project called Follow Me, so the drone will follow a single hero target using the network pipeline.
+The objective of this project is to build a segmentation network, it will be trained, validated and implemented in the project called *Follow Me*, so the drone will follow a single hero target using the network pipeline.
 
 ---
 <!--more-->
@@ -12,13 +12,13 @@ The objective of this project is to build a segmentation network, it will be tra
 
 #### How to run the program with your own code
 
-For the execution of your own code, inside the folder */code*
+For the execution of your own code, inside the folder ***/code***
 
 ```bash
 1.  jupyter notebook model_training.ipynb
 ```
 
-After opening the notebook, at the top, select the tab called *Cell* and select the option *Run All*.
+After opening the notebook, at the top, select the tab called ***Cell*** and select the option ***Run All***.
 
 ---
 
@@ -65,6 +65,14 @@ You're reading it!
 
 ---
 
+### Semantic Segmentation
+
+Semantic Segmentation is the task of assigning meaning to a part of an object. This can be done at the pixel level where we assign each pixel to a target class such as road, car, pedestrian, sign, or any number of other classes. Semantic segmentation helps us derive valuable information about every pixel in the image rather than just slicing sections into bounding boxes. It's mainly relevant to full scene understanding help with perception of the objects.
+
+<center>![alt text][image0]</center>
+###### <center>Trained FCN performing semantic segmentation. Input image (left), ground truth (center) and FCN output (left)</center>.
+
+
 ### Network Architecture
 
 If we want to do a *semantic segmentation*, we are interested not only in classifying whether a target person is present or not in the input image, but also in where that person is so that the drone controller can take the necessary actions such as: zoom in if the target is far away or move away from the centre of the image.
@@ -83,6 +91,12 @@ I will create a full convolution network following the suggestions of the classe
 
 ![alt text][image1]
 ###### Example FCN comprised of Encoder block (left) followed by 1x1 Convolution (center) and Decoder block (right)
+
+
+#### Encoder Block
+
+The fist step in building our network is to add feature detectors capable of transforming the input image into semantic representation. It squeezes the spacial dimensions at the same time that it increases the depth (or number of filters maps), by using a series of convolution layers, forcing the network to find generic representations of the data.
+
 
 ```python
 
