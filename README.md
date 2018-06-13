@@ -9,6 +9,7 @@ The objective of this project is to build a segmentation network, it will be tra
 
 [image0]: ./misc_images/semantic_segmentation.jpg "Semantic Segmentation"
 [image1]: ./misc_images/Fully_Convolutional_Network.jpg "Fully Convolutional Network"
+[image2]: ./misc_images/convolutional.jpg "1x1 Convolution"
 
 #### How to run the program with your own code
 
@@ -90,14 +91,73 @@ I will create a full convolution network following the suggestions of the classe
 ###### Example FCN comprised of Encoder block (left) followed by 1x1 Convolution (center) and Decoder block (right)
 
 
+```python
+def fcn_model(inputs, num_classes):
+    # TODO Add Encoder Blocks. 
+    # Remember that with each encoder layer, the depth of your model (the number of filters) increases.
+    encoder_block_1 = encoder_block(inputs, filters = 32, strides = 2)
+    encoder_block_2 = encoder_block(encoder_block_1, filters = 64, strides = 2)
+    encoder_block_3 = encoder_block(encoder_block_2, filters = 128, strides = 2)
+    encoder_block_4 = encoder_block(encoder_block_3, filters = 256, strides = 2)
+    
+    # TODO Add 1x1 Convolution layer using conv2d_batchnorm().
+    conv1 = conv2d_batchnorm(encoder_block_4, filters = 256, kernel_size = 1, strides = 1)
+    
+    # TODO: Add the same number of Decoder Blocks as the number of Encoder Blocks
+    decoder_block_1 = decoder_block(small_ip_layer = conv1, large_ip_layer = encoder_block_3, filters = 128)
+    decoder_block_2 = decoder_block(small_ip_layer = decoder_block_1, large_ip_layer = encoder_block_2, filters = 64)
+    decoder_block_3 = decoder_block(small_ip_layer = decoder_block_2, large_ip_layer = encoder_block_1, filters = 32)
+    decoder_block_4 = decoder_block(small_ip_layer = decoder_block_3, large_ip_layer = inputs, filters = num_classes)
+    
+    # The function returns the output layer of your model. "x" is the final layer obtained from the last decoder_block()
+    return layers.Conv2D(num_classes, 1, activation = 'softmax', padding = 'same')(decoder_block_4)
+```
+
+
 #### Encoder Block
 
 The fist step in building our network is to add feature detectors capable of transforming the input image into semantic representation. It squeezes the spacial dimensions at the same time that it increases the depth (or number of filters maps), by using a series of convolution layers, forcing the network to find generic representations of the data.
 
 
 ```python
-
+def separable_conv2d_batchnorm(input_layer, filters, strides=1):
+    output_layer = SeparableConv2DKeras(filters=filters,kernel_size=3, strides=strides,
+                             padding='same', activation='relu')(input_layer)
+    
+    output_layer = layers.BatchNormalization()(output_layer) 
+    return output_layer
 ```
+```python
+def encoder_block(input_layer, filters, strides):
+    # TODO Create a separable convolution layer using the separable_conv2d_batchnorm() function.
+    output_layer = separable_conv2d_batchnorm(input_layer, filters, strides)
+    return output_layer
+```
+
+
+#### 1x1 Convolution
+
+In between the encoder block and the decoder block is a 1x1 convolution layer that computes a semantic representation by combining the feature maps from the encoder. It that acts like a fully connected layer where the number of kernels is equivalent to the number of outputs of a fully connected layer.
+
+
+![alt text][image2]
+###### 1x1 Convolution combines feature maps (depth) preserving spacial information
+
+
+The reason for using a 1x1 convolution instead of a fully connected layer is that it preserves spacial information. Fully connected layers, on the other hand, all its dimensions are flattened into a single vector losing the original spacial structure of the input. One last reason for using convolution: it works for different input sizes while fully connected layers are constrained with a fixed output size.
+
+This is what the code for the 1x1 convolution layer looks like:
+
+```python
+def conv2d_batchnorm(input_layer, filters, kernel_size=3, strides=1):
+    output_layer = layers.Conv2D(filters=filters, kernel_size=kernel_size, strides=strides, 
+                      padding='same', activation='relu')(input_layer)
+    
+    output_layer = layers.BatchNormalization()(output_layer) 
+    return output_layer
+```
+
+
 
 ### Data Recording
 
