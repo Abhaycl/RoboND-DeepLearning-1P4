@@ -2,7 +2,6 @@
 
 The objective of this project is to build a segmentation network, it will be trained, validated and implemented in the project called *Follow Me*, so the drone will follow a single hero target using the network pipeline.
 
----
 <!--more-->
 
 [//]: # (Image References)
@@ -22,6 +21,7 @@ The objective of this project is to build a segmentation network, it will be tra
 [image12]: ./misc_images/quad_follow_me.jpg "Simulator Test Follow Me"
 
 ![alt text][image12]
+---
 
 
 #### How to run the program with your own code
