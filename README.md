@@ -14,6 +14,15 @@ The objective of this project is to build a segmentation network, it will be tra
 [image4]: ./misc_images/twolayerFCNmodel.jpg "Two Layer FCN Model"
 [image5]: ./misc_images/threelayerFCNmodel.jpg "Three Layer FCN Model"
 [image6]: ./misc_images/fourlayerFCNmodel.jpg "Four Layer FCN Model"
+[image7]: ./misc_images/onelayerFCNresult.jpg "One Layer FCN Result"
+[image8]: ./misc_images/twolayerFCNresult.jpg "Two Layer FCN Result"
+[image9]: ./misc_images/threelayerFCNresult.jpg "Three Layer FCN Result"
+[image10]: ./misc_images/fourlayerFCNresult.jpg "Four Layer FCN Result"
+[image10]: ./misc_images/learning_rate.jpg "Learning Rate"
+[image12]: ./misc_images/quad_follow_me.jpg "Simulator Test Follow Me"
+
+![alt text][image12]
+
 
 #### How to run the program with your own code
 
@@ -102,19 +111,17 @@ def fcn_model(inputs, num_classes):
     encoder_block_1 = encoder_block(inputs, filters = 32, strides = 2)
     encoder_block_2 = encoder_block(encoder_block_1, filters = 64, strides = 2)
     encoder_block_3 = encoder_block(encoder_block_2, filters = 128, strides = 2)
-    encoder_block_4 = encoder_block(encoder_block_3, filters = 256, strides = 2)
     
     # TODO Add 1x1 Convolution layer using conv2d_batchnorm().
-    conv1 = conv2d_batchnorm(encoder_block_4, filters = 256, kernel_size = 1, strides = 1)
+    conv1 = conv2d_batchnorm(encoder_block_3, filters = 128, kernel_size = 1, strides = 1)
     
     # TODO: Add the same number of Decoder Blocks as the number of Encoder Blocks
-    decoder_block_1 = decoder_block(small_ip_layer = conv1, large_ip_layer = encoder_block_3, filters = 128)
-    decoder_block_2 = decoder_block(small_ip_layer = decoder_block_1, large_ip_layer = encoder_block_2, filters = 64)
-    decoder_block_3 = decoder_block(small_ip_layer = decoder_block_2, large_ip_layer = encoder_block_1, filters = 32)
-    decoder_block_4 = decoder_block(small_ip_layer = decoder_block_3, large_ip_layer = inputs, filters = num_classes)
+    decoder_block_1 = decoder_block(small_ip_layer = conv1, large_ip_layer = encoder_block_2, filters = 64)
+    decoder_block_2 = decoder_block(small_ip_layer = decoder_block_1, large_ip_layer = encoder_block_1, filters = 32)
+    decoder_block_3 = decoder_block(small_ip_layer = decoder_block_2, large_ip_layer = inputs, filters = num_classes)
     
     # The function returns the output layer of your model. "x" is the final layer obtained from the last decoder_block()
-    return layers.Conv2D(num_classes, 1, activation = 'softmax', padding = 'same')(decoder_block_4)
+    return layers.Conv2D(num_classes, 1, activation = 'softmax', padding = 'same')(decoder_block_3)
 ```
 
 
@@ -122,6 +129,7 @@ def fcn_model(inputs, num_classes):
 
 The fist step in building our network is to add feature detectors capable of transforming the input image into semantic representation. It squeezes the spacial dimensions at the same time that it increases the depth (or number of filters maps), by using a series of convolution layers, forcing the network to find generic representations of the data.
 
+Each encoder layer allows the model to gain a better understanding of the shapes in the image. For example, the first layer is able to discern very basic characteristics in the image, such as lines, hues and brightness. The next layer is able to identify shapes, such as squares, circles and curves. Each subsequent layer continues to build more insight into the image. However, although each layer is able to gain a better understanding of the image, more layers increase the computation time when training the model.
 
 ```python
 def separable_conv2d_batchnorm(input_layer, filters, strides=1):
@@ -164,7 +172,7 @@ def conv2d_batchnorm(input_layer, filters, kernel_size=3, strides=1):
 
 #### Decoder Block
 
-Finally the decoder block upsamples the output from the 1x1 convolution back to the original input format, through the use of a series of transpose convolution layers.
+Finally the decoder block upsamples the output from the 1x1 convolution back to the original input format, through the use of a series of transpose convolution layers. Each decoder layer is able to reconstruct a little bit more spatial resolution from the layer before it. The final decoder layer will output a layer the same size as the original model input image, which will be used for guiding the quad.
 
 This is what the code for the decoder block looks like:
 
@@ -186,7 +194,10 @@ def decoder_block(small_ip_layer, large_ip_layer, filters):
     return output_layer
 ```
 
-I've also made use of *skip connections* allowing the network to use information from multiple resolution scales resulting on more precise segmentation decisions.
+
+#### Skip Connections
+
+Skip connections allow the network to retain information from prior layers that were lost in subsequent convolution layers. Skip layers use the output of one layer as the input to another layer. By using information from multiple image sizes, the model is able to make more precise segmentation decisions.
 
 
 ### FCN Model
@@ -219,8 +230,16 @@ def fcn_model(inputs, num_classes):
     return layers.Conv2D(num_classes, 1, activation = 'softmax', padding = 'same')(decoder_block_1)
 ```
 
+![alt text][image7]
+Epoch 60/60
+275/275 [============================>.] - ETA: 0s - loss: 0.0531
+276/275 [==============================] - 21s - loss: 0.0531 - val_loss: 0.0833
 
-The network performs poorly getting a score of 17%.
+weight = 0.7216610549943884
+final_IoU = 0.20031989796197253
+final_score = 0.14456306889960532
+
+The network performs poorly getting a score of 14.45%
 
 
 #### Two layer FCN model
@@ -242,14 +261,22 @@ def fcn_model(inputs, num_classes):
     
     # TODO: Add the same number of Decoder Blocks as the number of Encoder Blocks
     decoder_block_1 = decoder_block(small_ip_layer = conv1, large_ip_layer = encoder_block_1, filters = 32)
-    decoder_block_2 = decoder_block(small_ip_layer = decoder_block_2, large_ip_layer = inputs, filters = num_classes)
+    decoder_block_2 = decoder_block(small_ip_layer = decoder_block_1, large_ip_layer = inputs, filters = num_classes)
     
     # The function returns the output layer of your model. "x" is the final layer obtained from the last decoder_block()
     return layers.Conv2D(num_classes, 1, activation = 'softmax', padding = 'same')(decoder_block_2)
 ```
 
+![alt text][image8]
+Epoch 60/60
+275/275 [============================>.] - ETA: 0s - loss: 0.0255
+276/275 [==============================] - 37s - loss: 0.0255 - val_loss: 0.0287
 
-The network performs poorly getting a score of 17%.
+weight = 0.736228813559322
+final_IoU = 0.5350413294875553
+final_score = 0.39391284321382514
+
+The network performs getting a score of 39.39%
 
 
 #### Three layer FCN model
@@ -280,8 +307,16 @@ def fcn_model(inputs, num_classes):
     return layers.Conv2D(num_classes, 1, activation = 'softmax', padding = 'same')(decoder_block_3)
 ```
 
+![alt text][image9]
+Epoch 60/60
+275/275 [============================>.] - ETA: 0s - loss: 0.0148
+276/275 [==============================] - 37s - loss: 0.0147 - val_loss: 0.0266
 
-The network performs poorly getting a score of 17%.
+weight = 0.7320837927232635
+final_IoU = 0.5540195735790002
+final_score = 0.40558875066863964
+
+The network performs getting a score of 40.55%
 
 
 #### Four layer FCN model
@@ -314,8 +349,16 @@ def fcn_model(inputs, num_classes):
     return layers.Conv2D(num_classes, 1, activation = 'softmax', padding = 'same')(decoder_block_4)
 ```
 
+![alt text][image10]
+Epoch 60/60
+275/275 [============================>.] - ETA: 0s - loss: 0.0109
+276/275 [==============================] - 40s - loss: 0.0109 - val_loss: 0.0775
 
-The network performs poorly getting a score of 17%.
+weight = 0.6636636636636637
+final_IoU = 0.5071793997877216
+final_score = 0.3365965385978573
+
+The network performs poorly getting a score of 33.65%
 
 
 ### Data Recording
@@ -343,9 +386,9 @@ This was the most laborious part of this project. My strategy was to first start
 For the tuning of parameter values, for each of them I chose a small value and a big value comparing them to see an average term that would satisfy the expectations. The final Hyperparameters use in this project is:
 
 ```python
-learning_rate = 0.001
-batch_size = 16
-num_epochs = 50
+learning_rate = 0.01
+batch_size = 15
+num_epochs = 60
 steps_per_epoch = 4131 / batch_size
 validation_steps = 100
 workers = 2
@@ -354,9 +397,9 @@ workers = 2
 #### Define and tune hyperparameters
 
 * **learning_rate:** Started at 0.001 and the network had no problem with that value.
-* **batch_size:** Is the number of training samples/images that get propagated through the network in a single pass. It is set to 16.
-* **num_epochs:** Is the number of times the entire training dataset gets propagated through the network. This value is set to 50.
-* **steps_per_epoch:** Is the number of batches of training images that go through the network in 1 epoch. We have provided you with a default value. One recommended value to try would be based on the total number of images in training dataset divided by the batch_size. This value is set to 4131/16 = 258
+* **batch_size:** Is the number of training samples/images that get propagated through the network in a single pass. It is set to 15.
+* **num_epochs:** Is the number of times the entire training dataset gets propagated through the network. This value is set to 60.
+* **steps_per_epoch:** Is the number of batches of training images that go through the network in 1 epoch. We have provided you with a default value. One recommended value to try would be based on the total number of images in training dataset divided by the batch_size. This value is set to 4131/15 = 275
 * **validation_steps:** Is the number of batches of validation images that go through the network in 1 epoch. This is similar to steps_per_epoch, except validation_steps is for the validation dataset. We have provided you with a default value for this as well. This value is set to 100.
 * **workers:** Maximum number of processes to spin up. This can affect your training speed and is dependent on your hardware. We have provided a recommended value to work with. This value is set to 2.
 
@@ -365,7 +408,20 @@ The whole idea of SGD is to estimate the error function (and its derivative) by 
 
 I assume that the lower the batch size is, the noisier the training signal is going to be. On the flip side a higher batch size, it will take longer to compute the gradient for each step.
 
-The training signal seems to be stable enough and a batch size of 1 seems to be a suitable value for this dataset. Before moving forward, I've decided to check for larger values. since larger mini-batch sizes can potentially have performance advantage due to GPU speed-up of matrix-matrix products over matrix-vector products. I've then found that the batch size of 16 halved the time to process one epoch from 80s to 40s with a better final score.
+The training signal seems to be stable enough and a batch size of 1 seems to be a suitable value for this dataset. Before moving forward, I've decided to check for larger values. since larger mini-batch sizes can potentially have performance advantage due to GPU speed-up of matrix-matrix products over matrix-vector products. I've then found that the batch size of 15 halved the time to process one epoch from 80s to 40s with a better final score. A greater number of epochs can produce an over-saturation.
+
+Changing the value of the learnin rate by 0.1
+
+![alt text][image11]
+Epoch 60/60
+275/275 [============================>.] - ETA: 0s - loss: 0.0185
+276/275 [==============================] - 37s - loss: 0.0185 - val_loss: 0.0383
+
+weight = 0.7057673509286413
+final_IoU = 0.5668385874357691
+final_score = 0.40005616825867574
+
+The network performs getting a score of 40.05%
 
 
 #### The limitations to the neural network
