@@ -17,7 +17,7 @@ The objective of this project is to build a segmentation network, it will be tra
 [image8]: ./misc_images/twolayerFCNresult.jpg "Two Layer FCN Result"
 [image9]: ./misc_images/threelayerFCNresult.jpg "Three Layer FCN Result"
 [image10]: ./misc_images/fourlayerFCNresult.jpg "Four Layer FCN Result"
-[image10]: ./misc_images/learning_rate.jpg "Learning Rate"
+[image11]: ./misc_images/learning_rate.jpg "Learning Rate"
 [image12]: ./misc_images/quad_follow_me.jpg "Simulator Test Follow Me"
 
 ![alt text][image12]
