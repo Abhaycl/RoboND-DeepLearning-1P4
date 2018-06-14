@@ -231,6 +231,7 @@ def fcn_model(inputs, num_classes):
 ```
 
 ![alt text][image7]
+```
 Epoch 60/60
 275/275 [============================>.] - ETA: 0s - loss: 0.0531
 276/275 [==============================] - 21s - loss: 0.0531 - val_loss: 0.0833
@@ -238,7 +239,7 @@ Epoch 60/60
 weight = 0.7216610549943884
 final_IoU = 0.20031989796197253
 final_score = 0.14456306889960532
-
+```
 The network performs poorly getting a score of 14.45%
 
 
@@ -268,6 +269,7 @@ def fcn_model(inputs, num_classes):
 ```
 
 ![alt text][image8]
+```
 Epoch 60/60
 275/275 [============================>.] - ETA: 0s - loss: 0.0255
 276/275 [==============================] - 37s - loss: 0.0255 - val_loss: 0.0287
@@ -275,7 +277,7 @@ Epoch 60/60
 weight = 0.736228813559322
 final_IoU = 0.5350413294875553
 final_score = 0.39391284321382514
-
+```
 The network performs getting a score of 39.39%
 
 
@@ -308,6 +310,7 @@ def fcn_model(inputs, num_classes):
 ```
 
 ![alt text][image9]
+```
 Epoch 60/60
 275/275 [============================>.] - ETA: 0s - loss: 0.0148
 276/275 [==============================] - 37s - loss: 0.0147 - val_loss: 0.0266
@@ -315,7 +318,7 @@ Epoch 60/60
 weight = 0.7320837927232635
 final_IoU = 0.5540195735790002
 final_score = 0.40558875066863964
-
+```
 The network performs getting a score of 40.55%
 
 
@@ -350,6 +353,7 @@ def fcn_model(inputs, num_classes):
 ```
 
 ![alt text][image10]
+```
 Epoch 60/60
 275/275 [============================>.] - ETA: 0s - loss: 0.0109
 276/275 [==============================] - 40s - loss: 0.0109 - val_loss: 0.0775
@@ -357,7 +361,7 @@ Epoch 60/60
 weight = 0.6636636636636637
 final_IoU = 0.5071793997877216
 final_score = 0.3365965385978573
-
+```
 The network performs poorly getting a score of 33.65%
 
 
@@ -413,6 +417,7 @@ The training signal seems to be stable enough and a batch size of 1 seems to be 
 Changing the value of the learnin rate by 0.1
 
 ![alt text][image11]
+```
 Epoch 60/60
 275/275 [============================>.] - ETA: 0s - loss: 0.0185
 276/275 [==============================] - 37s - loss: 0.0185 - val_loss: 0.0383
@@ -420,7 +425,7 @@ Epoch 60/60
 weight = 0.7057673509286413
 final_IoU = 0.5668385874357691
 final_score = 0.40005616825867574
-
+```
 The network performs getting a score of 40.05%
 
 
