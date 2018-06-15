@@ -400,7 +400,7 @@ workers = 2
 
 #### Define and tune hyperparameters
 
-* **learning_rate:** Started at 0.001 and the network had no problem with that value.
+* **learning_rate:** Started at 0.01 and the network had no problem with that value.
 * **batch_size:** Is the number of training samples/images that get propagated through the network in a single pass. It is set to 15.
 * **num_epochs:** Is the number of times the entire training dataset gets propagated through the network. This value is set to 60.
 * **steps_per_epoch:** Is the number of batches of training images that go through the network in 1 epoch. We have provided you with a default value. One recommended value to try would be based on the total number of images in training dataset divided by the batch_size. This value is set to 4131/15 = 275
